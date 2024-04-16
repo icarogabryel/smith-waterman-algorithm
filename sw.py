@@ -16,7 +16,7 @@ class Cell:
     def getCellValue(self):
         return self.cellValue
 
-class sequencesTable:
+class scoreMatrix:
     def __init__(self, matchScore, missScore, gapScore, vSeq: str, hSeq: str):
         self.matchScore = matchScore
         self.missScore = missScore
@@ -33,14 +33,14 @@ class sequencesTable:
 
         self.table = [[Cell() for i in range(len(self.hSeq))] for j in range(len(self.vSeq))]
 
-        self.fillTable() # Create the table
+        self.findScores() # Create the table
 
     def validSeq(self, seq):
         for i in seq:
             if i not in ['A', 'C', 'G', 'T']:
                 raise ValueError(f"Invalid sequence. '{i}' is not a valid nucleotide.")
 
-    def fillTable(self):
+    def findScores(self):
         self.table[0][0].setCellValue(0)
 
         for i in self.table[0]:
@@ -63,4 +63,4 @@ class sequencesTable:
     def getBestAlignment(self): # todo
         pass
 
-table = sequencesTable(1, -1, -2, "ACGT", "ACGT")
+table = scoreMatrix(1, -1, -2, "ACGT", "ACGT")
