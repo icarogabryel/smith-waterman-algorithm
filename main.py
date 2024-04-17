@@ -1,4 +1,4 @@
-from sw import sequencesTable
+from ScoreMatrix import ScoreMatrix
 
 def main():
     pass
