@@ -6,9 +6,9 @@ def validSeq(seq):
 class ScoreCell:
     cellValue = None
 
-    upValue = None
-    leftValue = None
-    diagValue = None
+    valueComeFromUp = None
+    valueComeFromLeft= None
+    valueComeFromDiag = None
 
     validTraces = [False, False, False]
 
@@ -20,12 +20,33 @@ class ScoreCell:
 
     def getCellValue(self):
         return self.cellValue
+    
+    def setValueComeFromUp(self):
+        self.valueComeFromUp = True
+
+    def setValueComeFromLeft(self):
+        self.valueComeFromLeft = True
+
+    def setValueComeFromDiag(self):
+        self.valueComeFromDiag = True
+
+    def haveValueComeFromUp(self):
+        return self.valueComeFromUp
+    
+    def haveValueComeFromLeft(self):
+        return self.valueComeFromLeft
+    
+    def haveValueComeFromDiag(self):
+        return self.valueComeFromDiag
 
 class ScoreMatrix:
     def __init__(self, matchScore, missScore, gapScore, vSeq: str, hSeq: str):
         self.matchScore = matchScore
         self.missScore = missScore
         self.gapScore = gapScore
+
+        self.biggestAlignments = []
+        self.bestAlignments = 0
 
         self.vSeq = vSeq.upper() # Make sure the sequences are in uppercase
         self.hSeq = hSeq.upper()
@@ -66,13 +87,13 @@ class ScoreMatrix:
                 self.matrix[i][j].setCellValue(max(upValue, leftValue, diagValue))
 
                 if upValue == self.matrix[i][j].getCellValue():
-                    self.matrix[i][j].validTraces[0] = True
+                    self.matrix[i][j].setValueComeFromUp()
                 
                 if leftValue == self.matrix[i][j].getCellValue():
-                    self.matrix[i][j].validTraces[1] = True
+                    self.matrix[i][j].setValueComeFromLeft()
                 
                 if diagValue == self.matrix[i][j].getCellValue():
-                    self.matrix[i][j].validTraces[2] = True
+                    self.matrix[i][j].setValueComeFromDiag()
 
         self.printTable() #! remove
 
@@ -80,10 +101,49 @@ class ScoreMatrix:
         for i in self.matrix:
             print(i)
 
-    def getBiggestAlignment(self): # todo
+    def getBiggestAlignments(self):
+        return self.findAlignmentAt(-1, -1)
+    
+    def getBestAlignment(self):
         pass
+        
+    def findAlignmentAt(self, i, j):
+        listOfAlignments = []
+        
+        vSeq = self.vSeq
+        hSeq = self.hSeq
 
-    def getBestAlignment(self): # todo
-        pass
+        matrix = self.matrix
+        
+        def backTrace(i, j, vAlign = "", hAlign = ""):
+            if (i == -len(vSeq)) or (j == -len(hSeq)):
+                alignment = f'{vAlign}\n{hAlign}\n\n'
+
+                listOfAlignments.append(alignment)
+            
+            else:
+                if matrix[i][j].haveValueComeFromUp():
+                    tempV = vSeq[i] + vAlign
+                    tempH = '-' + hAlign
+
+                    backTrace(i - 1, j, tempV, tempH)
+
+                if matrix[i][j].haveValueComeFromLeft():
+                    tempV = '-' + vAlign
+                    tempH = hSeq[j] + hAlign
+
+                    backTrace(i, j - 1, tempV, tempH)
+
+                if matrix[i][j].haveValueComeFromDiag():
+                    tempV = vSeq[i] + vAlign
+                    tempH = hSeq[j] + hAlign
+
+                    backTrace(i - 1, j - 1, tempV, tempH)
+
+        backTrace(i, j)
+
+        return listOfAlignments
 
 table = ScoreMatrix(1, -1, -2, "cctcagt", "taccta")
+for i in table.getBiggestAlignments():
+    print(i)
