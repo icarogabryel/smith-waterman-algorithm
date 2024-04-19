@@ -102,10 +102,26 @@ class ScoreMatrix:
             print(i)
 
     def getBiggestAlignments(self):
-        return self.findAlignmentAt(-1, -1)
+        return self.findAlignmentAt(len(self.vSeq) - 1, len(self.hSeq) - 1)
     
-    def getBestAlignment(self):
-        pass
+    def getBestScoreAlignments(self):
+        borderCells = []
+
+        # append the cells from last row and column
+        for i in range(len(self.vSeq)):
+            for j in range(len(self.hSeq)):
+                if (i == len(self.vSeq) -1)  or (j == len(self.hSeq) -1):
+                    borderCells.append((self.matrix[i][j].getCellValue(), i, j))
+
+        # find the best score
+        bestScoresCells = [i for i in borderCells if i[0] == max(borderCells)[0]]
+
+        bestScoreAlignments = []
+
+        for i in bestScoresCells:
+            bestScoreAlignments += self.findAlignmentAt(i[1], i[2])
+        
+        return bestScoreAlignments
         
     def findAlignmentAt(self, i, j):
         listOfAlignments = []
@@ -116,7 +132,7 @@ class ScoreMatrix:
         matrix = self.matrix
         
         def backTrace(i, j, vAlign = "", hAlign = ""):
-            if (i == -len(vSeq)) or (j == -len(hSeq)):
+            if (i == 0) or (j == 0):
                 alignment = f'{vAlign}\n{hAlign}\n\n'
 
                 listOfAlignments.append(alignment)
@@ -146,4 +162,8 @@ class ScoreMatrix:
 
 table = ScoreMatrix(1, -1, -2, "cctcagt", "taccta")
 for i in table.getBiggestAlignments():
+    print(i)
+
+for i in table.getBestScoreAlignments():
+    print('b')
     print(i)
