@@ -1,7 +1,15 @@
 from ScoreMatrix import ScoreMatrix
 
 def main():
-    matrix = ScoreMatrix(3, -1, -2, "cctcagt", "taccta")
+    with open('input.txt', 'r') as file:
+        vSeq = file.readline().strip()
+        hSeq = file.readline().strip()
+
+        gapScore = int(file.readline())
+        missScore = int(file.readline())
+        matchScore = int(file.readline())
+    
+    matrix = ScoreMatrix(matchScore, missScore, gapScore, vSeq, hSeq)
     
     matrix.printMatrix()
 
