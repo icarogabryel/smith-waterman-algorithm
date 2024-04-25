@@ -3,6 +3,14 @@ def validSeq(seq):
             if i not in ['A', 'C', 'G', 'T']:
                 raise ValueError(f"Invalid sequence. '{i}' is not a valid nucleotide.")
 
+def makeStrLenThree(string): # Todo: remove
+    if len(string) > 3:
+        raise ValueError("The string is longer than 3 characters.")
+    
+    result = ' ' * (3 - len(string)) + string
+
+    return result
+
 class ScoreCell:
     cellValue = None
 
@@ -95,11 +103,12 @@ class ScoreMatrix:
                 if diagValue == self.matrix[i][j].getCellValue():
                     self.matrix[i][j].setValueComeFromDiag()
 
-        self.printTable() #! remove
+    def printMatrix(self):
 
-    def printTable(self): #! remove
-        for i in self.matrix:
-            print(i)
+        print('\033[36m' + '   ' + ''.join([f'  {i}  ' for i in self.hSeq]) + '\033[0m')
+        
+        for i in range(len(self.matrix)):
+            print('\033[36m' + f' {self.vSeq[i]} ' + '\033[0m' + '\033[32m' + ''.join([f' {makeStrLenThree(str(j))} ' for j in self.matrix[i]]) + '\033[0m')
 
     def getBiggestAlignments(self):
         return self.findAlignmentAt(len(self.vSeq) - 1, len(self.hSeq) - 1)
@@ -159,11 +168,3 @@ class ScoreMatrix:
         backTrace(i, j)
 
         return listOfAlignments
-
-table = ScoreMatrix(1, -1, -2, "cctcagt", "taccta")
-for i in table.getBiggestAlignments():
-    print(i)
-
-for i in table.getBestScoreAlignments():
-    print('b')
-    print(i)
