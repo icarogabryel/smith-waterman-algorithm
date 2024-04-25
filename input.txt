@@ -1,5 +1,5 @@
-cctcagt
-taccta
+gtcctt
+tcct
 -2
 -1
-3
+1
