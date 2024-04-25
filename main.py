@@ -1,7 +1,7 @@
 from ScoreMatrix import ScoreMatrix
 
 def main():
-    matrix = ScoreMatrix(1, -1, -2, "cctcagt", "taccta")
+    matrix = ScoreMatrix(3, -1, -2, "cctcagt", "taccta")
     
     matrix.printMatrix()
 
