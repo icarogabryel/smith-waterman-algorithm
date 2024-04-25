@@ -104,11 +104,10 @@ class ScoreMatrix:
                     self.matrix[i][j].setValueComeFromDiag()
 
     def printMatrix(self):
+        for i in range(len(self.matrix)-1, 0, -1):
+            print('\033[36m' + f' {self.vSeq[i]} ' + '\033[0m' + '\033[32m' + ''.join([f' {makeStrLenThree(str(j))} ' for j in self.matrix[i]]) + '\033[0m')
 
         print('\033[36m' + '   ' + ''.join([f'  {i}  ' for i in self.hSeq]) + '\033[0m')
-        
-        for i in range(len(self.matrix)):
-            print('\033[36m' + f' {self.vSeq[i]} ' + '\033[0m' + '\033[32m' + ''.join([f' {makeStrLenThree(str(j))} ' for j in self.matrix[i]]) + '\033[0m')
 
     def getBiggestAlignments(self):
         return self.findAlignmentAt(len(self.vSeq) - 1, len(self.hSeq) - 1)
