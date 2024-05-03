@@ -1,11 +1,9 @@
-def isValidSeq(seq):
-    for i in seq:
-        if i not in ['A', 'C', 'G', 'T']:
-            return False
-        
-    return True
+def validSeq(seq):
+        for i in seq:
+            if i not in ['A', 'C', 'G', 'T']:
+                raise ValueError(f"Invalid sequence. '{i}' is not a valid nucleotide.")
 
-def makeStrLenThree(string): # todo change this function to a more general one
+def makeStrLenThree(string):
     if len(string) > 3:
         raise ValueError("The string is longer than 3 characters.")
     
@@ -13,14 +11,16 @@ def makeStrLenThree(string): # todo change this function to a more general one
 
     return result
 
+
 class ScoreCell:
-    cellValue = None
+    def __init__(self) -> None:
+        self.cellValue = None
 
-    valueComeFromUp = None
-    valueComeFromLeft= None
-    valueComeFromDiag = None
+        self.valueComeFromUp = False
+        self.valueComeFromLeft = False
+        self.valueComeFromDiag = False
 
-    validTraces = [False, False, False]
+        self.validTraces = [False, False, False]
 
     def __repr__(self) -> str:
         return f'{self.cellValue}'
@@ -40,14 +40,15 @@ class ScoreCell:
     def setValueComeFromDiag(self):
         self.valueComeFromDiag = True
 
-    def haveValueComeFromUp(self):
+    def haveValueComeFromUp(self) -> bool:
         return self.valueComeFromUp
     
-    def haveValueComeFromLeft(self):
+    def haveValueComeFromLeft(self) -> bool:
         return self.valueComeFromLeft
     
-    def haveValueComeFromDiag(self):
+    def haveValueComeFromDiag(self) -> bool:
         return self.valueComeFromDiag
+
 
 class ScoreMatrix:
     def __init__(self, matchScore, missScore, gapScore, vSeq: str, hSeq: str):
@@ -56,24 +57,21 @@ class ScoreMatrix:
         self.gapScore = gapScore
 
         self.biggestAlignments = []
-        self.bestAlignments = 0
 
         self.vSeq = vSeq.upper() # Make sure the sequences are in uppercase
         self.hSeq = hSeq.upper()
 
-        if not isValidSeq(self.vSeq): # Check if the sequences only contain 'A', 'C', 'G' or 'T'
-            raise ValueError(f"Invalid sequence. '{i}' is not a valid nucleotide.")
-        if not isValidSeq(self.hSeq):
-            raise ValueError(f"Invalid sequence. '{i}' is not a valid nucleotide.")
+        validSeq(self.vSeq) # Check if the sequences only contain 'A', 'C', 'G' or 'T'
+        validSeq(self.hSeq)
 
         self.vSeq = 'U' + self.vSeq # Add a 'U' to the beginning of the sequences
         self.hSeq = 'U' + self.hSeq
 
-        self.matrix = [[ScoreCell() for i in range(len(self.hSeq))] for j in range(len(self.vSeq))]
+        self.matrix = [[ScoreCell() for i in range(len(self.hSeq))] for j in range(len(self.vSeq))] # Initialize the matrix
 
-        self.findScores() # Create the table
+        self.findScores() # Fill the matrix with the scores
 
-    def findScores(self):
+    def findScores(self): # Find and fill the matrix with the scores
         self.matrix[0][0].setCellValue(0) # Set the first cell to 0
 
         for i in range(1, len(self.matrix[0])): # Set the first row and column to the gap score
@@ -117,56 +115,35 @@ class ScoreMatrix:
 
     def getBiggestAlignments(self):
         return self.findAlignmentAt(len(self.vSeq) - 1, len(self.hSeq) - 1)
-    
-    def getBestScoreAlignments(self):
-        borderCells = []
-
-        # append the cells from last row and column
-        for i in range(len(self.vSeq)):
-            for j in range(len(self.hSeq)):
-                if (i == len(self.vSeq) -1)  or (j == len(self.hSeq) -1):
-                    borderCells.append((self.matrix[i][j].getCellValue(), i, j))
-
-        # find the best score
-        bestScoresCells = [i for i in borderCells if i[0] == max(borderCells)[0]]
-
-        bestScoreAlignments = []
-
-        for i in bestScoresCells:
-            bestScoreAlignments += self.findAlignmentAt(i[1], i[2])
-        
-        return bestScoreAlignments
         
     def findAlignmentAt(self, i, j):
         listOfAlignments = []
-        
-        vSeq = self.vSeq
-        hSeq = self.hSeq
 
-        matrix = self.matrix
-        
-        def backTrace(i, j, vAlign = "", hAlign = ""):
+        def backTrace(i: int, j: int, vAlign = "", hAlign = ""):
+            nonlocal listOfAlignments
+            nonlocal self
+            
             if (i == 0) and (j == 0):
                 alignment = f'{vAlign}\n{hAlign}\n\n'
 
                 listOfAlignments.append(alignment)
-            
+
             else:
-                if matrix[i][j].haveValueComeFromUp():
-                    tempV = vSeq[i] + vAlign
+                if self.matrix[i][j].haveValueComeFromUp():
+                    tempV = self.vSeq[i] + vAlign
                     tempH = '-' + hAlign
 
                     backTrace(i - 1, j, tempV, tempH)
 
-                if matrix[i][j].haveValueComeFromLeft():
+                if self.matrix[i][j].haveValueComeFromLeft():
                     tempV = '-' + vAlign
-                    tempH = hSeq[j] + hAlign
+                    tempH = self.hSeq[j] + hAlign
 
                     backTrace(i, j - 1, tempV, tempH)
 
-                if matrix[i][j].haveValueComeFromDiag():
-                    tempV = vSeq[i] + vAlign
-                    tempH = hSeq[j] + hAlign
+                if self.matrix[i][j].haveValueComeFromDiag():
+                    tempV = self.vSeq[i] + vAlign
+                    tempH = self.hSeq[j] + hAlign
 
                     backTrace(i - 1, j - 1, tempV, tempH)
 
