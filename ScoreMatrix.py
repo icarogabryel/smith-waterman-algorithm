@@ -1,9 +1,11 @@
-def validSeq(seq):
-        for i in seq:
-            if i not in ['A', 'C', 'G', 'T']:
-                raise ValueError(f"Invalid sequence. '{i}' is not a valid nucleotide.")
+def isValidSeq(seq):
+    for i in seq:
+        if i not in ['A', 'C', 'G', 'T']:
+            return False
+        
+    return True
 
-def makeStrLenThree(string): # Todo: remove
+def makeStrLenThree(string): # todo change this function to a more general one
     if len(string) > 3:
         raise ValueError("The string is longer than 3 characters.")
     
@@ -59,8 +61,10 @@ class ScoreMatrix:
         self.vSeq = vSeq.upper() # Make sure the sequences are in uppercase
         self.hSeq = hSeq.upper()
 
-        validSeq(self.vSeq) # Check if the sequences only contain 'A', 'C', 'G' or 'T'
-        validSeq(self.hSeq)
+        if not isValidSeq(self.vSeq): # Check if the sequences only contain 'A', 'C', 'G' or 'T'
+            raise ValueError(f"Invalid sequence. '{i}' is not a valid nucleotide.")
+        if not isValidSeq(self.hSeq):
+            raise ValueError(f"Invalid sequence. '{i}' is not a valid nucleotide.")
 
         self.vSeq = 'U' + self.vSeq # Add a 'U' to the beginning of the sequences
         self.hSeq = 'U' + self.hSeq
@@ -76,11 +80,13 @@ class ScoreMatrix:
             previousValue = self.matrix[0][i - 1].getCellValue()
             
             self.matrix[0][i].setCellValue(self.gapScore + previousValue)
+            self.matrix[0][i].setValueComeFromLeft()
 
         for i in range(1, len(self.matrix)):
             previousValue = self.matrix[i - 1][0].getCellValue()
 
             self.matrix[i][0].setCellValue(self.gapScore + previousValue)
+            self.matrix[i][0].setValueComeFromUp()
 
         for i in range(1, len(self.vSeq)): # Fill the rest of the table
             for j in range(1, len(self.hSeq)):
@@ -140,7 +146,7 @@ class ScoreMatrix:
         matrix = self.matrix
         
         def backTrace(i, j, vAlign = "", hAlign = ""):
-            if (i == 0) or (j == 0):
+            if (i == 0) and (j == 0):
                 alignment = f'{vAlign}\n{hAlign}\n\n'
 
                 listOfAlignments.append(alignment)

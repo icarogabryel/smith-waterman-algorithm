@@ -13,5 +13,8 @@ def main():
     
     matrix.printMatrix()
 
+    for i in matrix.getBiggestAlignments():
+        print(i)
+
 if __name__ == '__main__':
     main()
