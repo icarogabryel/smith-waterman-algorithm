@@ -9,7 +9,7 @@ def validSeq(seq):
             if i not in ['A', 'C', 'G', 'T']:
                 raise ValueError(f"Invalid sequence. '{i}' is not a valid nucleotide.")
 
-def makeStrLenThree(string):
+def makeStrLenThree(string): # todo change to all len
     if len(string) > 3:
         raise ValueError("The string is longer than 3 characters.")
     
@@ -113,46 +113,66 @@ class ScoreMatrix:
                 if diagValue == self.matrix[i][j].getCellValue():
                     self.matrix[i][j].setValueComeFromDiag()
 
-    def printMatrix(self):
+    def getMatrixInStr(self, cellsPath = []): # todo: change to print top to bottom
+        matrixInStr = ''
+
         for i in range(len(self.matrix)-1, -1, -1):
-            print(BLUE + f' {self.vSeq[i]} ' + END_COLOR + GREEN + ''.join([f' {makeStrLenThree(str(j))} ' for j in self.matrix[i]]) + END_COLOR)
+            scoreLine = ''
 
-        print(BLUE + '   ' + ''.join([f'  {i}  ' for i in self.hSeq]) + END_COLOR)
+            for j in range(len(self.matrix[i])):
+                if (i, j) in cellsPath:
+                    scoreLine += RED + f' {makeStrLenThree(str(self.matrix[i][j].getCellValue()))} ' + END_COLOR
+                else:
+                    scoreLine += GREEN + f' {makeStrLenThree(str(self.matrix[i][j].getCellValue()))} ' + END_COLOR
 
-    def getBiggestAlignments(self):
+            matrixInStr += BLUE + f' {self.vSeq[i]} ' + END_COLOR + scoreLine + '\n'
+
+        matrixInStr += BLUE + '   ' + ''.join([f'  {i}  ' for i in self.hSeq]) + END_COLOR
+
+        return matrixInStr
+
+    def getBiggestAlignments(self) -> list:
         return self.findAlignmentAt(len(self.vSeq) - 1, len(self.hSeq) - 1)
         
-    def findAlignmentAt(self, i, j):
-        listOfAlignments = []
+    def findAlignmentAt(self, i: int, j: int) -> list[tuple[str, list[tuple[int, int]]]]:
+        alignmentWithPathList = []
 
-        def backTrace(i: int, j: int, vAlign = "", hAlign = ""):
-            nonlocal listOfAlignments
+        def backTrace(i: int, j: int, vAlign = "", hAlign = "", cellsPath = []):
+            nonlocal alignmentWithPathList
             nonlocal self
             
             if (i == 0) and (j == 0):
-                alignment = f'{vAlign}\n{hAlign}\n\n'
+                alignment = f'{vAlign}\n{hAlign}'
 
-                listOfAlignments.append(alignment)
+                tempCellsPath = cellsPath + [(i, j)]
+
+                alignmentWithPathList.append((alignment, tempCellsPath))
 
             else:
                 if self.matrix[i][j].haveValueComeFromUp():
                     tempV = self.vSeq[i] + vAlign
                     tempH = '-' + hAlign
 
-                    backTrace(i - 1, j, tempV, tempH)
+                    tempCellsPath = cellsPath + [(i, j)]
+
+                    backTrace(i - 1, j, tempV, tempH, tempCellsPath)
 
                 if self.matrix[i][j].haveValueComeFromLeft():
                     tempV = '-' + vAlign
                     tempH = self.hSeq[j] + hAlign
 
-                    backTrace(i, j - 1, tempV, tempH)
+                    tempCellsPath = cellsPath + [(i, j)]
+
+                    backTrace(i, j - 1, tempV, tempH, tempCellsPath)
 
                 if self.matrix[i][j].haveValueComeFromDiag():
                     tempV = self.vSeq[i] + vAlign
                     tempH = self.hSeq[j] + hAlign
 
-                    backTrace(i - 1, j - 1, tempV, tempH)
+                    tempCellsPath = cellsPath + [(i, j)]
+
+                    backTrace(i - 1, j - 1, tempV, tempH, tempCellsPath)
 
         backTrace(i, j)
 
-        return listOfAlignments
+        return alignmentWithPathList

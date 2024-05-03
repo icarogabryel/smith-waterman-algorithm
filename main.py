@@ -11,10 +11,13 @@ def main():
     
     matrix = ScoreMatrix(matchScore, missScore, gapScore, vSeq, hSeq)
     
-    matrix.printMatrix()
+    print(f'Score Matrix of of the sequences {vSeq} and {hSeq}\n')
+    print(matrix.getMatrixInStr(), '\n')
 
+    print('Biggest Alignments of the matrix\n')
     for i in matrix.getBiggestAlignments():
-        print(i)
+        print(i[0], '\n')
+        print(matrix.getMatrixInStr(i[1]), '\n')
 
 if __name__ == '__main__':
     main()
