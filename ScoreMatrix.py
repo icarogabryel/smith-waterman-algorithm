@@ -1,3 +1,9 @@
+BLUE = '\033[36m'
+GREEN = '\033[32m'
+RED = '\033[31m'
+END_COLOR = '\033[0m'
+
+
 def validSeq(seq):
         for i in seq:
             if i not in ['A', 'C', 'G', 'T']:
@@ -109,9 +115,9 @@ class ScoreMatrix:
 
     def printMatrix(self):
         for i in range(len(self.matrix)-1, -1, -1):
-            print('\033[36m' + f' {self.vSeq[i]} ' + '\033[0m' + '\033[32m' + ''.join([f' {makeStrLenThree(str(j))} ' for j in self.matrix[i]]) + '\033[0m')
+            print(BLUE + f' {self.vSeq[i]} ' + END_COLOR + GREEN + ''.join([f' {makeStrLenThree(str(j))} ' for j in self.matrix[i]]) + END_COLOR)
 
-        print('\033[36m' + '   ' + ''.join([f'  {i}  ' for i in self.hSeq]) + '\033[0m')
+        print(BLUE + '   ' + ''.join([f'  {i}  ' for i in self.hSeq]) + END_COLOR)
 
     def getBiggestAlignments(self):
         return self.findAlignmentAt(len(self.vSeq) - 1, len(self.hSeq) - 1)
