@@ -62,8 +62,8 @@ class ScoreMatrix:
         self.vSeq = vSeq.upper() # Make sure the sequences are in uppercase
         self.hSeq = hSeq.upper()
 
-        validSeq(self.vSeq) # Check if the sequences only contain 'A', 'C', 'G' or 'T'
-        validSeq(self.hSeq)
+        #validSeq(self.vSeq) # Check if the sequences only contain 'A', 'C', 'G' or 'T'
+        #validSeq(self.hSeq)
 
         self.vSeq = 'U' + self.vSeq # Add a 'U' to the beginning of the sequences
         self.hSeq = 'U' + self.hSeq
@@ -181,28 +181,30 @@ class ScoreMatrix:
 
                     backTrace(i - 1, j, tempAlignmentScore, tempV, tempH, tempCellsPath)
 
-                if self.matrix[i][j].haveValueComeFromLeft():
-                    tempV = '-' + vAlign
-                    tempH = self.hSeq[j] + hAlign
+                else:
+                    if self.matrix[i][j].haveValueComeFromLeft():
+                        tempV = '-' + vAlign
+                        tempH = self.hSeq[j] + hAlign
 
-                    tempAlignmentScore = alignmentScore + self.gapScore
+                        tempAlignmentScore = alignmentScore + self.gapScore
 
-                    tempCellsPath = cellsPath + [(i, j)]
+                        tempCellsPath = cellsPath + [(i, j)]
 
-                    backTrace(i, j - 1, tempAlignmentScore, tempV, tempH, tempCellsPath)
+                        backTrace(i, j - 1, tempAlignmentScore, tempV, tempH, tempCellsPath)
 
-                if self.matrix[i][j].haveValueComeFromDiag():
-                    tempV = self.vSeq[i] + vAlign
-                    tempH = self.hSeq[j] + hAlign
-
-                    if self.vSeq[i] == self.hSeq[j]:
-                        tempAlignmentScore = alignmentScore + self.matchScore
                     else:
-                        tempAlignmentScore = alignmentScore + self.missScore
-                    
-                    tempCellsPath = cellsPath + [(i, j)]
+                        if self.matrix[i][j].haveValueComeFromDiag():
+                            tempV = self.vSeq[i] + vAlign
+                            tempH = self.hSeq[j] + hAlign
 
-                    backTrace(i - 1, j - 1, tempAlignmentScore, tempV, tempH, tempCellsPath)
+                            if self.vSeq[i] == self.hSeq[j]:
+                                tempAlignmentScore = alignmentScore + self.matchScore
+                            else:
+                                tempAlignmentScore = alignmentScore + self.missScore
+                            
+                            tempCellsPath = cellsPath + [(i, j)]
+
+                            backTrace(i - 1, j - 1, tempAlignmentScore, tempV, tempH, tempCellsPath)
 
         backTrace(i, j, 0)
 
