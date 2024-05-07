@@ -1,5 +1,6 @@
-Score Matrix
-
+------------------------------
+Valores de score
+------------------------------
  T -12  -9  -6  -3   0
  T -10  -7  -4  -1   2
  C  -8  -5  -2   1  -1
@@ -8,9 +9,12 @@ Score Matrix
  G  -2  -1  -3  -5  -7
  U   0  -2  -4  -6  -8
      U   T   C   C   T
-Alignments found
-
+------------------------------
+Alinhamentos ( Match = 1 | Missmatch = -1 | Gap = -2)
+------------------------------
 GTCCTT
 -TCCT-
+
 GTCCTT
 -TCC-T
+
