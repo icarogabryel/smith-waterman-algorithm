@@ -12,6 +12,7 @@ def validSeq(seq):
 def addLength(string, length): # todo change to all len
     return ' ' * (length - len(string)) + string
 
+
 class ScoreCell:
     def __init__(self) -> None:
         self.cellValue = None
@@ -74,13 +75,13 @@ class ScoreMatrix:
     def findScores(self): # Find and fill the matrix with the scores
         self.matrix[0][0].setCellValue(0) # Set the first cell to 0
 
-        for i in range(1, len(self.matrix[0])): # Set the first row and column to the gap score
+        for i in range(1, len(self.matrix[0])): # Set the first row
             previousValue = self.matrix[0][i - 1].getCellValue()
             
             self.matrix[0][i].setCellValue(self.gapScore + previousValue)
             self.matrix[0][i].setValueComeFromLeft()
 
-        for i in range(1, len(self.matrix)):
+        for i in range(1, len(self.matrix)): # Set the first column
             previousValue = self.matrix[i - 1][0].getCellValue()
 
             self.matrix[i][0].setCellValue(self.gapScore + previousValue)
@@ -88,17 +89,17 @@ class ScoreMatrix:
 
         for i in range(1, len(self.vSeq)): # Fill the rest of the table
             for j in range(1, len(self.hSeq)):
-                upValue = self.matrix[i - 1][j].getCellValue() + self.gapScore
-                leftValue = self.matrix[i][j - 1].getCellValue() + self.gapScore
+                upValue = self.matrix[i - 1][j].getCellValue() + self.gapScore # Pick the value from the cell above
+                leftValue = self.matrix[i][j - 1].getCellValue() + self.gapScore # Pick the value from the cell to the left
 
-                if self.vSeq[i] == self.hSeq[j]:
+                if self.vSeq[i] == self.hSeq[j]: # Pick the value from the diagonal cell
                     diagValue = self.matrix[i - 1][j - 1].getCellValue() + self.matchScore
                 else:
                     diagValue = self.matrix[i - 1][j - 1].getCellValue() + self.missScore
 
-                self.matrix[i][j].setCellValue(max(upValue, leftValue, diagValue))
+                self.matrix[i][j].setCellValue(max(upValue, leftValue, diagValue)) # Pick the maximum value to be the cell value
 
-                if upValue == self.matrix[i][j].getCellValue():
+                if upValue == self.matrix[i][j].getCellValue(): # Check where the value came from
                     self.matrix[i][j].setValueComeFromUp()
                 
                 if leftValue == self.matrix[i][j].getCellValue():
@@ -107,7 +108,7 @@ class ScoreMatrix:
                 if diagValue == self.matrix[i][j].getCellValue():
                     self.matrix[i][j].setValueComeFromDiag()
 
-    def getMatrixInStr(self, cellsPath = []): # todo: change to print top to bottom
+    def getMatrixInStr(self, cellsPath = []):
         matrixInStr = ''
         maxCellLen = 0
 
@@ -131,7 +132,7 @@ class ScoreMatrix:
 
         return matrixInStr
     
-    def getMatrixInStrNoColor(self, cellsPath = []): # todo: change to print top to bottom
+    def getMatrixInStrNoColor(self, cellsPath = []):
         matrixInStr = ''
         maxCellLen = 0
 
