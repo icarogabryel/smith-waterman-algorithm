@@ -13,7 +13,7 @@ def main():
 
     print('\nAlignments found\n')
     for i in matrix.getBiggestAlignments():
-        print('-' * 20, '\n')
+        print('-' * 30, '\n')
         print(i[0], '\n')
         print(matrix.getMatrixInStr(i[1]), '\n')
 

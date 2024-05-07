@@ -121,13 +121,13 @@ class ScoreMatrix:
 
             for j in range(len(self.matrix[i])):
                 if (i, j) in cellsPath:
-                    scoreLine += RED + f' {addLength(str(self.matrix[i][j].getCellValue()), maxCellLen)} ' + END_COLOR
+                    scoreLine += RED + f' {addLength(str(self.matrix[i][j].getCellValue()), maxCellLen)}' + END_COLOR
                 else:
-                    scoreLine += GREEN + f' {addLength(str(self.matrix[i][j].getCellValue()), maxCellLen)} ' + END_COLOR
+                    scoreLine += GREEN + f' {addLength(str(self.matrix[i][j].getCellValue()), maxCellLen)}' + END_COLOR
 
-            matrixInStr += BLUE + f' {self.vSeq[i]} ' + END_COLOR + scoreLine + '\n'
+            matrixInStr += BLUE + f' {self.vSeq[i]}' + END_COLOR + scoreLine + '\n'
 
-        matrixInStr += BLUE + '   ' + ''.join([f' {addLength(i, maxCellLen)} ' for i in self.hSeq]) + END_COLOR
+        matrixInStr += BLUE + '  ' + ''.join([f' {addLength(i, maxCellLen)}' for i in self.hSeq]) + END_COLOR
 
         return matrixInStr
 
