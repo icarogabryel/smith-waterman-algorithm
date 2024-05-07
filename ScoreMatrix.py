@@ -9,14 +9,8 @@ def validSeq(seq):
             if i not in ['A', 'C', 'G', 'T']:
                 raise ValueError(f"Invalid sequence. '{i}' is not a valid nucleotide.")
 
-def makeStrLenThree(string): # todo change to all len
-    if len(string) > 3:
-        raise ValueError("The string is longer than 3 characters.")
-    
-    result = ' ' * (3 - len(string)) + string
-
-    return result
-
+def addLength(string, length): # todo change to all len
+    return ' ' * (length - len(string)) + string
 
 class ScoreCell:
     def __init__(self) -> None:
@@ -115,19 +109,25 @@ class ScoreMatrix:
 
     def getMatrixInStr(self, cellsPath = []): # todo: change to print top to bottom
         matrixInStr = ''
+        maxCellLen = 0
+
+        for i in self.matrix:
+            for j in i:
+                if len(str(j.getCellValue())) > maxCellLen:
+                    maxCellLen = len(str(j.getCellValue()))
 
         for i in range(len(self.matrix)-1, -1, -1):
             scoreLine = ''
 
             for j in range(len(self.matrix[i])):
                 if (i, j) in cellsPath:
-                    scoreLine += RED + f' {makeStrLenThree(str(self.matrix[i][j].getCellValue()))} ' + END_COLOR
+                    scoreLine += RED + f' {addLength(str(self.matrix[i][j].getCellValue()), maxCellLen)} ' + END_COLOR
                 else:
-                    scoreLine += GREEN + f' {makeStrLenThree(str(self.matrix[i][j].getCellValue()))} ' + END_COLOR
+                    scoreLine += GREEN + f' {addLength(str(self.matrix[i][j].getCellValue()), maxCellLen)} ' + END_COLOR
 
             matrixInStr += BLUE + f' {self.vSeq[i]} ' + END_COLOR + scoreLine + '\n'
 
-        matrixInStr += BLUE + '   ' + ''.join([f'  {i}  ' for i in self.hSeq]) + END_COLOR
+        matrixInStr += BLUE + '   ' + ''.join([f' {addLength(i, maxCellLen)} ' for i in self.hSeq]) + END_COLOR
 
         return matrixInStr
 

@@ -10,12 +10,10 @@ def main():
         matchScore = int(file.readline())
     
     matrix = ScoreMatrix(matchScore, missScore, gapScore, vSeq, hSeq)
-    
-    print(f'Score Matrix of of the sequences {vSeq} and {hSeq}\n')
-    print(matrix.getMatrixInStr(), '\n')
 
-    print('Biggest Alignments of the matrix\n')
+    print('\nAlignments found\n')
     for i in matrix.getBiggestAlignments():
+        print('-' * 20, '\n')
         print(i[0], '\n')
         print(matrix.getMatrixInStr(i[1]), '\n')
 
