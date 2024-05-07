@@ -16,16 +16,3 @@ def getBestScoreAlignments(self):
         bestScoreAlignments += self.findAlignmentAt(i[1], i[2])
     
     return bestScoreAlignments
-
-def outer_f():
-    s = 5
-
-    def inner_f():
-        nonlocal s
-        s = s + 1
-        return s
-
-    return inner_f()
-
-
-print(outer_f())

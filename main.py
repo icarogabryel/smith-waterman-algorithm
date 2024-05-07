@@ -17,5 +17,15 @@ def main():
         print(i[0], '\n')
         print(matrix.getMatrixInStr(i[1]), '\n')
 
+    with open('output.txt', 'w') as file:
+        file.write('Score Matrix\n\n')
+        file.write(matrix.getMatrixInStrNoColor() + '\n')
+
+        file.write('Alignments found\n\n')
+        for i in matrix.getBiggestAlignments():
+            file.write(i[0] + '\n\n')
+
+    print('Output written to output.txt')
+
 if __name__ == '__main__':
     main()

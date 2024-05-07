@@ -130,6 +130,27 @@ class ScoreMatrix:
         matrixInStr += BLUE + '  ' + ''.join([f' {addLength(i, maxCellLen)}' for i in self.hSeq]) + END_COLOR
 
         return matrixInStr
+    
+    def getMatrixInStrNoColor(self, cellsPath = []): # todo: change to print top to bottom
+        matrixInStr = ''
+        maxCellLen = 0
+
+        for i in self.matrix:
+            for j in i:
+                if len(str(j.getCellValue())) > maxCellLen:
+                    maxCellLen = len(str(j.getCellValue()))
+
+        for i in range(len(self.matrix)-1, -1, -1):
+            scoreLine = ''
+
+            for j in range(len(self.matrix[i])):
+                scoreLine += f' {addLength(str(self.matrix[i][j].getCellValue()), maxCellLen)}'
+
+            matrixInStr += f' {self.vSeq[i]}' + scoreLine + '\n'
+
+        matrixInStr += '  ' + ''.join([f' {addLength(i, maxCellLen)}' for i in self.hSeq])
+
+        return matrixInStr
 
     def getBiggestAlignments(self) -> list:
         return self.findAlignmentAt(len(self.vSeq) - 1, len(self.hSeq) - 1)
