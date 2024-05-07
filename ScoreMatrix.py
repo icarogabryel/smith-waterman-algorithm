@@ -159,7 +159,7 @@ class ScoreMatrix:
     def findAlignmentAt(self, i: int, j: int) -> list[tuple[str, list[tuple[int, int]]]]:
         alignmentWithPathList = []
 
-        def backTrace(i: int, j: int, vAlign = "", hAlign = "", cellsPath = []):
+        def backTrace(i: int, j: int, alignmentScore: int, vAlign = "", hAlign = "", cellsPath = []):
             nonlocal alignmentWithPathList
             nonlocal self
             
@@ -168,33 +168,42 @@ class ScoreMatrix:
 
                 tempCellsPath = cellsPath + [(i, j)]
 
-                alignmentWithPathList.append((alignment, tempCellsPath))
+                alignmentWithPathList.append((alignment, alignmentScore, tempCellsPath))
 
             else:
                 if self.matrix[i][j].haveValueComeFromUp():
                     tempV = self.vSeq[i] + vAlign
                     tempH = '-' + hAlign
 
+                    tempAlignmentScore = alignmentScore + self.gapScore
+
                     tempCellsPath = cellsPath + [(i, j)]
 
-                    backTrace(i - 1, j, tempV, tempH, tempCellsPath)
+                    backTrace(i - 1, j, tempAlignmentScore, tempV, tempH, tempCellsPath)
 
                 if self.matrix[i][j].haveValueComeFromLeft():
                     tempV = '-' + vAlign
                     tempH = self.hSeq[j] + hAlign
 
+                    tempAlignmentScore = alignmentScore + self.gapScore
+
                     tempCellsPath = cellsPath + [(i, j)]
 
-                    backTrace(i, j - 1, tempV, tempH, tempCellsPath)
+                    backTrace(i, j - 1, tempAlignmentScore, tempV, tempH, tempCellsPath)
 
                 if self.matrix[i][j].haveValueComeFromDiag():
                     tempV = self.vSeq[i] + vAlign
                     tempH = self.hSeq[j] + hAlign
 
+                    if self.vSeq[i] == self.hSeq[j]:
+                        tempAlignmentScore = alignmentScore + self.matchScore
+                    else:
+                        tempAlignmentScore = alignmentScore + self.missScore
+                    
                     tempCellsPath = cellsPath + [(i, j)]
 
-                    backTrace(i - 1, j - 1, tempV, tempH, tempCellsPath)
+                    backTrace(i - 1, j - 1, tempAlignmentScore, tempV, tempH, tempCellsPath)
 
-        backTrace(i, j)
+        backTrace(i, j, 0)
 
         return alignmentWithPathList

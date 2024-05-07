@@ -12,8 +12,12 @@ Valores de score
 ------------------------------
 Alinhamentos ( Match = 1 | Missmatch = -1 | Gap = -2)
 ------------------------------
+Score do alinhamento: 0
+
 GTCCTT
 -TCCT-
+
+Score do alinhamento: 0
 
 GTCCTT
 -TCC-T

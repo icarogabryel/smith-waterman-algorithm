@@ -18,7 +18,8 @@ def main():
     for i in matrix.getBiggestAlignments():
         print('-' * 30, '\n')
         print(i[0], '\n')
-        print(matrix.getMatrixInStr(i[1]), '\n')
+        print(f'Score: {i[1]}\n')
+        print(matrix.getMatrixInStr(i[2]), '\n')
 
     # Write output to file
     with open('output.txt', 'w') as file:
@@ -33,6 +34,7 @@ def main():
         file.write(f'{'-' * 30}\n')
 
         for i in matrix.getBiggestAlignments():
+            file.write(f'Score do alinhamento: {i[1]}\n\n')
             file.write(i[0] + '\n\n')
 
     print('Output written to output.txt')
