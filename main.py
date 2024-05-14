@@ -13,8 +13,10 @@ def main():
     # Create score matrix
     matrix = ScoreMatrix(matchScore, missScore, gapScore, vSeq, hSeq)
 
+    print('\nAluno: Ícaro Gabryel - MAT: 20209050584 - Número: 16\n')
+
     # Print alignments and score matrix
-    print('\nAlignments found\n')
+    print('Alignments found\n')
     for i in matrix.getBiggestAlignments():
         print('-' * 30, '\n')
         print(i[0], '\n')
@@ -23,6 +25,7 @@ def main():
 
     # Write output to file
     with open('output.txt', 'w') as file:
+        file.write('Aluno: Icaro Gabryel - MAT: 20209050584 - Numero: 16\n\n')
         file.write(f'{'-' * 30}\n')
         file.write('Valores de score\n')
         file.write(f'{'-' * 30}\n')
