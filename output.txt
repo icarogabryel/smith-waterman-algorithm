@@ -1,22 +1,52 @@
-Aluno: Icaro Gabryel - MAT: 20209050584 - Numero: 16
+ 9Aluno: Icaro Gabryel - MAT: 20209050584 - Numero: 16
 
 ------------------------------
 Valores de score
 ------------------------------
- T -14  -9  -4  -3  -2   0   2
- G -12  -7  -2  -1  -3  -1   4
- A -10  -5   0  -2  -1   1   6
- C  -8  -3  -2   0   1   3   4
- T  -6  -1  -3  -2   0   5   3
- C  -4  -3  -2   0   2   0  -2
- C  -2  -1  -3  -1  -3  -5  -7
+ T -14 -11  -8  -7  -6  -5  -6
+ G -12  -9  -6  -5  -6  -5  -4
+ A -10  -7  -4  -5  -4  -3  -2
+ C  -8  -5  -4  -3  -2  -3  -2
+ T  -6  -3  -4  -3  -3  -1  -3
+ C  -4  -3  -2  -2  -2  -4  -6
+ C  -2  -1  -3  -3  -5  -7  -9
  U   0  -2  -4  -6  -8 -10 -12
      U   T   A   C   C   T   A
 ------------------------------
-Alinhamentos ( Match = 3 | Missmatch = -1 | Gap = -2)
+Alinhamentos ( Match = 1 | Missmatch = -1 | Gap = -2)
 ------------------------------
-Score do alinhamento: 2
+Score do alinhamento: -6
 
 --CCTCAGT
 TACCT-A--
+
+Score do alinhamento: -6
+
+CCTCAGT
+TACCTA-
+
+Score do alinhamento: -6
+
+CCTCAGT
+TACCT-A
+
+Score do alinhamento: -6
+
+CCTCAGT
+TACC-TA
+
+Score do alinhamento: -6
+
+CCTCAGT
+TA-CCTA
+
+Score do alinhamento: -6
+
+CCTCAGT
+T-ACCTA
+
+Score do alinhamento: -6
+
+CCTCAGT
+-TACCTA
 
