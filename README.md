@@ -44,7 +44,7 @@ print(matrix.matrix)
 
 In the `example.py` file there is a function that prints the matrix and the alignments found in colors in the terminal.
 
-![Example](print.png)
+![Example](docs/print.png)
 
 ## License
 
