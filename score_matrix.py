@@ -97,13 +97,13 @@ class ScoreMatrix:
             nonlocal alignments
             nonlocal self
             
-            if self.matrix[i][j] == 0: # If the value is 0, add the alignment to the list
+            if self.matrix[i][j].getValue( )== 0: # If the value is 0, add the alignment to the list
                 alignment = Alignment(vAlign, hAlign, cellsPath)
 
                 alignments.append(alignment)
 
             else:
-                if self.matrix[i][j].haveValueComeFromUp(): # Check where the value came from up
+                if self.matrix[i][j].haveValueComeFromUp: # Check where the value came from up
                     tempVAlign = self.vSeq[i] + vAlign
                     tempHAlign = '-' + hAlign
 
@@ -111,7 +111,7 @@ class ScoreMatrix:
 
                     backTrace(i - 1, j, tempVAlign, tempHAlign, tempCellsPath)
 
-                if self.matrix[i][j].haveValueComeFromLeft(): # Check where the value came from left
+                if self.matrix[i][j].haveValueComeFromLeft: # Check where the value came from left
                     tempVAlign = '-' + vAlign
                     tempHAlign = self.hSeq[j] + hAlign
 
@@ -119,10 +119,9 @@ class ScoreMatrix:
 
                     backTrace(i, j - 1, tempVAlign, tempHAlign, tempCellsPath)
 
-
-                if self.matrix[i][j].haveValueComeFromDiag(): # Check where the value came from diagonal
+                if self.matrix[i][j].haveValueComeFromDiag: # Check where the value came from diagonal
                     tempVAlign = self.vSeq[i] + vAlign
-                    tempH = self.hSeq[j] + hAlign
+                    tempHAlign = self.hSeq[j] + hAlign
                     
                     tempCellsPath = cellsPath + [(i, j)]
 
