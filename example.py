@@ -49,8 +49,14 @@ def main():
 
     alignments = matrix.getAlignments()
 
-    for i in alignments:
-        printAlign(vSeq, hSeq, matrix.matrix, i.path)
+    print('Alignments found:\n')
+
+    for alignment in alignments:
+        print('-' * 25 + '\n')
+        print(f'Alignment:\n{alignment.hAlign}\n{alignment.vAlign}\n')
+
+        print('Backtrack path:')
+        printAlign(vSeq, hSeq, matrix.matrix, alignment.path)
 
 
 if __name__ == '__main__': main()
