@@ -39,14 +39,14 @@ def matrixToString(matrix: list[list[ScoreCell]]):
 
     for i in matrix:
         for j in i:
-            if len(str(j.value)) > maxCellLen:
-                maxCellLen = len(str(j.value))
+            if len(str(j.getValue())) > maxCellLen:
+                maxCellLen = len(str(j.getValue()))
 
     for i in range(len(matrix)):
         scoreLine = ''
 
         for j in range(len(matrix[i])):
-            scoreLine += f' {addLength(str(matrix[i][j].value), maxCellLen)}'
+            scoreLine += f' {addLength(str(matrix[i][j].getValue()), maxCellLen)}'
 
         matrixInStr += scoreLine + '\n'
 

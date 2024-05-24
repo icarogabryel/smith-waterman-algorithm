@@ -7,20 +7,23 @@ class Alignment:
 
 class ScoreCell:
     def __init__(self) -> None:
-        self.value = None
+        self.__value = None
 
         self.haveValueComeFromUp = False
         self.haveValueComeFromLeft = False
         self.haveValueComeFromDiag = False
 
     def __repr__(self) -> str:
-        return str(self.value)
+        return str(self.__value)
+    
+    def getValue(self) -> int:
+        return self.__value
     
     def setValue(self, value: int) -> None:
         if value < 0:
-            self.value = 0
+            self.__value = 0
         else:
-            self.value = value
+            self.__value = value
 
 
 class ScoreMatrix:
@@ -37,39 +40,39 @@ class ScoreMatrix:
         self.findScores() # Fill the matrix with the scores
 
     def findScores(self): # Find and fill the matrix with the scores
-        self.matrix[0][0].value = 0 # Set the first cell to 0
+        self.matrix[0][0].setValue(0) # Set the first cell to 0
 
         for i in range(1, len(self.matrix[0])): # Set the first row
-            previousValue = self.matrix[0][i - 1].value
+            previousValue = self.matrix[0][i - 1].getValue()
             
             self.matrix[0][i].setValue(self.gapScore + previousValue)
             self.matrix[0][i].haveValueComeFromLeft = True
 
         for i in range(1, len(self.matrix)): # Set the first column
-            previousValue = self.matrix[i - 1][0].value
+            previousValue = self.matrix[i - 1][0].getValue()
 
             self.matrix[i][0].setValue(self.gapScore + previousValue)
             self.matrix[i][0].haveValueComeFromUp = True
 
         for i in range(1, len(self.vSeq)): # Fill the rest of the table
             for j in range(1, len(self.hSeq)):
-                upValue = self.matrix[i - 1][j].value + self.gapScore # Pick the value from the cell above
-                leftValue = self.matrix[i][j - 1].value + self.gapScore # Pick the value from the cell to the left
+                upValue = self.matrix[i - 1][j].getValue() + self.gapScore # Pick the value from the cell above
+                leftValue = self.matrix[i][j - 1].getValue() + self.gapScore # Pick the value from the cell to the left
 
                 if self.vSeq[i] == self.hSeq[j]: # Pick the value from the diagonal cell
-                    diagValue = self.matrix[i - 1][j - 1].value + self.matchScore
+                    diagValue = self.matrix[i - 1][j - 1].getValue() + self.matchScore
                 else:
-                    diagValue = self.matrix[i - 1][j - 1].value + self.missScore
+                    diagValue = self.matrix[i - 1][j - 1].getValue() + self.missScore
 
                 self.matrix[i][j].setValue(max(upValue, leftValue, diagValue)) # Pick the maximum value to be the cell value
 
-                if upValue == self.matrix[i][j].value: # Check where the value came from
+                if upValue == self.matrix[i][j].getValue(): # Check where the value came from
                     self.matrix[i][j].haveValueComeFromUp = True
                 
-                if leftValue == self.matrix[i][j].value:
+                if leftValue == self.matrix[i][j].getValue():
                     self.matrix[i][j].haveValueComeFromLeft = True
                 
-                if diagValue == self.matrix[i][j].value:
+                if diagValue == self.matrix[i][j].getValue():
                     self.matrix[i][j].haveValueComeFromDiag = True
 
     def findMaxIndexes(self) -> list[tuple[int, int]]: # Find the indexes of the maximum value(s) in the matrix
@@ -78,11 +81,11 @@ class ScoreMatrix:
 
             for i in range(len(self.matrix)):
                 for j in range(len(self.matrix[i])):
-                    if self.matrix[i][j].value > maxValue:
+                    if self.matrix[i][j].getValue() > maxValue:
                         maxIndexes = [(i, j)]
-                        maxValue = self.matrix[i][j].value
+                        maxValue = self.matrix[i][j].getValue()
                     
-                    elif self.matrix[i][j].value == maxValue:
+                    elif self.matrix[i][j].getValue() == maxValue:
                         maxIndexes.append((i, j))
 
             return maxIndexes
@@ -90,17 +93,17 @@ class ScoreMatrix:
     def findAlignmentsAt(self, i: int, j: int) -> list[Alignment]: # Find the alignments at a specific cell
         alignments = []
 
-        def backTrace(i: int, j: int, vAlign = "", hAlign = "", cellsPath = []):
+        def backTrace(i: int, j: int, vAlign = "", hAlign = "", cellsPath = []): # Backtrace to find the different alignments
             nonlocal alignments
             nonlocal self
             
-            if self.matrix[i][j] == 0:
+            if self.matrix[i][j] == 0: # If the value is 0, add the alignment to the list
                 alignment = Alignment(vAlign, hAlign, cellsPath)
 
                 alignments.append(alignment)
 
             else:
-                if self.matrix[i][j].haveValueComeFromUp():
+                if self.matrix[i][j].haveValueComeFromUp(): # Check where the value came from up
                     tempVAlign = self.vSeq[i] + vAlign
                     tempHAlign = '-' + hAlign
 
@@ -108,7 +111,7 @@ class ScoreMatrix:
 
                     backTrace(i - 1, j, tempVAlign, tempHAlign, tempCellsPath)
 
-                if self.matrix[i][j].haveValueComeFromLeft():
+                if self.matrix[i][j].haveValueComeFromLeft(): # Check where the value came from left
                     tempVAlign = '-' + vAlign
                     tempHAlign = self.hSeq[j] + hAlign
 
@@ -117,7 +120,7 @@ class ScoreMatrix:
                     backTrace(i, j - 1, tempVAlign, tempHAlign, tempCellsPath)
 
 
-                if self.matrix[i][j].haveValueComeFromDiag():
+                if self.matrix[i][j].haveValueComeFromDiag(): # Check where the value came from diagonal
                     tempVAlign = self.vSeq[i] + vAlign
                     tempH = self.hSeq[j] + hAlign
                     
@@ -132,7 +135,7 @@ class ScoreMatrix:
     def getAlignments(self) -> list[Alignment]: # Get the alignments
         alignments = []
         
-        for i in self.findMaxIndexes():
+        for i in self.findMaxIndexes(): # Find the alignments at the maximum value(s)
             alignments += self.findAlignmentsAt(i[0], i[1])
 
         return alignments
